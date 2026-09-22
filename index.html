@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#07110b">
+  <title>Private Group</title>  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      color: white;
+      background:
+        radial-gradient(circle at 50% 0%, #16452b 0%, transparent 45%),
+        linear-gradient(145deg, #050a07, #0b1710);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      padding: 36px 26px;
+      text-align: center;
+      border: 1px solid rgba(80,255,140,.12);
+      border-radius: 28px;
+      background: rgba(12, 24, 17, .88);
+      box-shadow: 0 30px 90px rgba(0,0,0,.5);
+      backdrop-filter: blur(20px);
+    }
+
+    .logo {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 23px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      box-shadow: 0 12px 35px rgba(37,211,102,.25);
+      font-size: 34px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #aab8b0;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: 0;
+      border-radius: 15px;
+      background: #25d366;
+      color: #061009;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(37,211,102,.22);
+    }
+
+    button:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+
+    .status {
+      min-height: 20px;
+      margin-top: 15px;
+      color: #72df91;
+      font-size: 13px;
+    }
+
+    .footer {
+      margin-top: 25px;
+      color: #59665e;
+      font-size: 11px;
+    }
+  </style></head><body>
+  <div class="card">
+    <div class="logo">💬</div><h1>Private Group</h1>
+
+<p>
+  Klik tombol di bawah untuk melanjutkan ke grup.
+</p>
+
+<button id="join">
+  Join Group
+</button>
+
+<div class="status" id="status"></div>
+
+<div class="footer">
+  Private access
+</div>
+
+  </div>  <script>
+    const btn = document.getElementById("join");
+    const status = document.getElementById("status");
+
+    btn.onclick = async () => {
+      btn.disabled = true;
+      btn.textContent = "Opening...";
+      status.textContent = "Membuka WhatsApp...";
+
+      try {
+        const response = await fetch("/api/join");
+
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+
+        const data = await response.json();
+
+        if (!data.url) {
+          throw new Error("No redirect URL");
+        }
+
+        window.location.replace(data.url);
+      } catch {
+        btn.disabled = false;
+        btn.textContent = "Join Group";
+        status.textContent = "Gagal membuka grup. Coba lagi.";
+      }
+    };
+  </script></body>
+</html>
